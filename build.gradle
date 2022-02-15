@@ -54,8 +54,4 @@ spotless {
     java {
 		prettier(['prettier': '2.5.1', 'prettier-plugin-java': '1.6.1']).config(['parser': 'java', 'tabWidth': 4, printWidth: 100, useTabs: false])
 	}
-	groovyGradle {
-		target '*.gradle' // default target of groovyGradle
-		greclipse()
-	}
 }

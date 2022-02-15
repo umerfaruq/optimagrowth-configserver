@@ -1,0 +1,51 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "com.diffplug.spotless" version "6.2.2"
+	id 'com.palantir.docker' version '0.32.0'
+	id 'java'
+}
+
+group = 'com.optimagrowth'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+docker {
+	name "umerfaruq/$rootProject.name"
+	tag 'currentVersion', "$name:$project.version"
+	files bootJar.outputs
+	buildArgs([JAR_FILE: bootJar.outputs.files.singleFile.name])
+}
+
+spotless {
+    java {
+		prettier(['prettier': '2.5.1', 'prettier-plugin-java': '1.6.1']).config(['parser': 'java', 'tabWidth': 4, printWidth: 100, useTabs: false])
+	}
+	groovyGradle {
+		target '*.gradle' // default target of groovyGradle
+		greclipse()
+	}
+}
